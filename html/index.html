@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}自慧理{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="css/page-index.css?v=1">
+{% endblock %}
+
+{% block main %}
+<script>
+	$(document).ready(function () {
+		function getCookie(name) {
+		  const value = `; ${document.cookie}`;
+		  const parts = value.split(`; ${name}=`);
+		  if (parts.length === 2) return parts.pop().split(';').shift();
+		}
+
+		var day = new Date().getDay()
+		var weekday = "{{weekNotice}}"[new Date().getDay()];
+		if(weekday == "1" && (day!=getCookie("day")||getCookie("day")==undefined)){
+			alert("提示:今天還未做運動");
+			document.cookie="day="+day;
+		}
+	});
+</script>
+	<div class="container">
+		<center>
+		<div class="card my-3">
+			<img src="/images/card_physiotherapy.png" class="card-img-top" alt="(物理治療)">
+			<div class="card-body">
+				<h5 class="card-title">我的物理治療</h5>
+				<p class="card-text">無須等待預約，輕鬆在家自助式物理治療！</p>
+				<a href="/allCourse/" class="btn btn-primary">開始物理治療</a>
+			</div>
+		</div>
+		<div class="card my-3">
+			<img src="/images/card_myschedule.png" class="card-img-top" alt="(物理治療)">
+			<div class="card-body">
+				<h5 class="card-title">我的時間表</h5>
+				<p class="card-text">變更提醒設定及檢視已排定之課程</p>
+				<a href="/mySchedule/" class="btn btn-primary">
+					<i class="bi bi-calendar3"></i>查看</a>
+			</div>
+		</div>
+		<div class="card my-3">
+			<img src="/images/card_myrecord.png" class="card-img-top" alt="(物理治療)">
+			<div class="card-body">
+				<h5 class="card-title">我的記錄</h5>
+				<p class="card-text">檢視我做過的物理治療紀錄，<br>或重温錄影/示範影像</p>
+				<a href="/myRecord/" class="btn btn-primary">
+					<i class="bi bi-collection-fill"></i>查看</a>
+			</div>
+		</div>
+
+		<div class="card my-3">
+			<img src="/images/card_tutorial.png?v=1" class="card-img-top" alt="(使用教學)">
+			<div class="card-body">
+				<h5 class="card-title">使用教學</h5>
+				<p class="card-text">此教學可讓你了解如何使用本程式</p>
+				<a href="/tutorial/" class="btn btn-primary">好，看教學！</a>
+			</div>
+		</div>
+		</center>
+	</div>
+{% endblock %}

@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% block title %}自慧理 - 時間表{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="css/page-index.css?v=1">
+{% endblock %}
+
+{% block main %}
+
+<script>
+	$(document).ready(function () {
+		function getCookie(name) {
+		  const value = `; ${document.cookie}`;
+		  const parts = value.split(`; ${name}=`);
+		  if (parts.length === 2) return parts.pop().split(';').shift();
+		}
+
+		$(".cardItem").hide();
+		req = {"method": "select", "tables": ["notice"], "where": {"userID": getCookie("userid")}, "order": {}}
+
+		$.ajax({
+                type: "get",
+                url: "/db",
+                async: false,
+                dataType:"json",
+                data: {"jsonstr":JSON.stringify(req)} ,  //http 请求 记住要把数据转换为json格式数据
+                success: function (res) {
+                	result=JSON.parse(res);
+                	console.log(result);
+                	console.log(result.select);
+                	console.log(result.select[0]);
+                	console.log(result.select.length);
+					if (result.status=="success"){
+						for (var i=0;i<result.select.length;i++) {
+							console.log(result.select[i]["sportname"]);
+							$("."+result.select[i]["sportname"]).show();
+						}
+					}
+                },
+                error:function () {
+                    console.log("返回失敗");
+                }
+   			});
+		$('td').click(function () {
+			if ($(this).filter(".bg-success").is("td")) {
+				$(this).removeClass("bg-success");
+				$(this).addClass("text-dark");
+				$(this).removeClass("text-light");
+			} else {
+				$(this).addClass("bg-success");
+				$(this).addClass("text-light");
+				$(this).removeClass("text-dark");
+			}
+
+		});
+		function isempty(ele) {
+			ele=ele.filter(".bg-success").html();
+			if(ele == null || ele == "" || ele == undefined){
+				return "0";
+			}else{return "1";}
+
+		}
+
+		$('#btndbupdate').click(function () {
+			var weekni = ( isempty($(".w0"))+ isempty($(".w1"))+isempty($(".w2"))+isempty($(".w3"))+isempty($(".w4"))+isempty($(".w5"))+isempty($(".w6")) );
+			var userid = getCookie("userid");
+			req  = {
+            "method": "update",
+            "tables": ["userinfo"],
+            "where": {"userID": userid },
+            "update": {"weekNotice": weekni}
+       		};
+			$.ajax({
+                type: "get",
+                url: "/db",
+                async: false,
+                dataType:"json",
+                data: {"jsonstr":JSON.stringify(req)} ,  //http 请求 记住要把数据转换为json格式数据
+                success: function (res) {
+                	result=JSON.parse(res);
+					if (result.status=="success"){
+						alert("已更新");
+					}
+                },
+                error:function () {
+                    console.log("返回失敗");
+                }
+   			});
+		});
+
+		$(".delfavorite").click(function () {
+			userid=getCookie("userid");
+			name= $(this).attr("dbvalue");
+			var reqa = {
+				"method": "delete",
+				"where": {"userID": userid, "sportname": name}
+			};
+			console.log(reqa);
+			$(this).parent().parent().hide();
+			$.ajax({
+                type: "get",
+                url: "/db",
+                async: false,
+                dataType:"json",
+                data: {"jsonstr":JSON.stringify(reqa)} ,  //http 请求 记住要把数据转换为json格式数据
+                success: function (res) {
+                	result=JSON.parse(res);
+					$(this).parent().parent().hide();
+                },
+                error:function () {
+                    console.log("返回失敗");
+                    $(this).parent().parent().hide();
+                }
+   			});
+
+
+		});
+	});
+</script>
+<!--彈出詳情介面 default hidden-->
+<div id="modaldetail" class="modal">
+    <div class="modal-content">
+        <span class="close mx-3 my-4" onclick="youtubeclose();">&times;</span>
+        <div class="card card-body my-3">
+            <span class="lead"><strong>示範影片</strong></span>
+        </div>
+        <div class="text-center">
+            <iframe class='youtube-video' allowfullscreen="" frameborder="0" height="360" src="https://www.youtube.com/embed/XheVMMdHII0?start=384&enablejsapi=1" width="640"></iframe>
+        </div>
+
+    </div>
+</div>
+<!-- 上面係彈出詳情介面 default hidden-->
+<div class="container">
+	<div class="card my-3 inputcol">
+		<div class="card-body">
+			<h5 class="input-group">
+				<div class="col-7">時間表</div>
+				<div id="insert-btnsimp"></div>
+				<div class="col-1"></div>
+			</h5>
+			<table class="table table-active">
+				<tr>
+					<th colspan="7" class="text-center">提醒時間表</th>
+				</tr>
+				<tr>
+					<td class="w0 {{'bg-success text-light ' if weekNotice[0]=='1' else ''}}">星期日</td>
+					<td class="w1 {{'bg-success text-light ' if weekNotice[0]=='1' else ''}}">星期一</td>
+					<td class="w2 {{'bg-success text-light ' if weekNotice[2]=='1' else ''}}">星期二</td>
+					<td class="w3 {{'bg-success text-light ' if weekNotice[3]=='1' else ''}}">星期三</td>
+					<td class="w4 {{'bg-success text-light ' if weekNotice[4]=='1' else ''}}">星期四</td>
+					<td class="w5 {{'bg-success text-light ' if weekNotice[5]=='1' else ''}}">星期五</td>
+					<td class="w6 {{'bg-success text-light ' if weekNotice[6]=='1' else ''}}">星期六</td>
+				</tr>
+			</table>
+			<div class="col-12 btn btn-primary" id="btndbupdate">更新</div>
+		</div>
+	</div>
+</div>
+<fieldset class="fs-group">
+	<legend class="h2 h2-legend text-light text-shadow">已排定之課程</legend>
+	<div class="container">
+		<!-- LEMON: every div-card data should select/generate from database (course-timetable), 已排定課程紀錄for提醒user ~LC -->
+
+		{%for couserInfo in couserInfos%}
+			<div class="card {{couserInfo['sportname']}} my-3 cardItem">
+				<img src="images/{{couserInfo['imgpath']}}"
+					height="50%" class="card-img-top" alt="(物理治療)">
+				<div class="card-body">
+					<h5 class="card-title 3_33">{{couserInfo['sportname']}}</h5>
+					<p class="card-text">{{couserInfo["sdescribe"]}}</p>
+					<a href="/training/{{couserInfo['engname']}}" class="btn btn-primary">
+						<i class="bi bi-arrow-return-left"></i>立即開始</a>
+					<div  class="btn btn-danger delfavorite" dbvalue="{{couserInfo['sportname']}}">
+						<i class="bi bi-trash-fill"></i>移除提示</div>
+					<a class="btn btn-dark"  onclick="openModal('02022022_1329');">
+						<i class="bi bi-film" ></i>觀看示範</a>
+				</div>
+			</div>
+		{%endfor%}
+		<!--{%for schedule in Schedules%}
+		<div class="card my-3">
+			<img src="https://images.pexels.com/photos/6616781/pexels-photo-6616781.jpeg"
+			<img src="{{schedule.src}}"
+				height="50%" class="card-img-top" alt="(物理治療)">
+			<div class="card-body">
+
+				<h5 class="card-title">{{schedule.name}}</h5>
+				<h6>上次完成日期:{{schedule.finishDay}}</h6>
+				<p class="card-text">{{schedule.intro}}</p>
+				<a href="training/1" class="btn btn-primary">
+					<i class="bi bi-arrow-right"></i>開始物理治療</a>
+				<a  class="btn btn-danger">
+					<i class="bi bi-trash-fill"></i>移除提示</a>
+			</div>
+		</div>
+		<div class="card my-3">
+			<img src="https://images.pexels.com/photos/1242349/pexels-photo-1242349.jpeg"
+				class="card-img-top" alt="(使用教學)">
+			<div class="card-body">
+				<h5 class="card-title">擴胸運動</h5>
+				<h6>上次完成日期:13-15-2022</h6>
+				<p class="card-text">(描述...)</p>
+				<a href="training/1" class="btn btn-primary">
+					<i class="bi bi-arrow-right"></i>開始物理治療</a>
+				<a href="mySchedule.html" class="btn btn-danger">
+					<i class="bi bi-trash-fill"></i>移除提示</a>
+			</div>
+		</div>
+		{%endfor%}-->
+		<div class="card my-3">
+			<div class="card-body">
+				<a href="allCourse">
+					<h5 class="card-title"><i class="bi bi-plus-square"></i>更多課程</h5>
+				</a>
+
+			</div>
+		</div>
+	</div>
+</fieldset>
+
+{% endblock %}

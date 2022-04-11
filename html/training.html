@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}自慧理{% endblock %}
+{% block js %}
+<script type="text/javascript" src="/js/modal.js?=0.0006"></script>
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="css/page-index.css?v=1">
+{% endblock %}
+
+{% block main %}
+
+<!--彈出介面 default hidden-->
+<div id="modaldetail" class="modal">
+    <div class="modal-content">
+        <span class="close mx-3 my-4" onclick="youtubeclose();">&times;</span>
+        <div class="card card-body my-3">
+            <span class="lead"><strong>示範影像 (請橫向放置螢幕)</strong></span>
+        </div>
+        <div class="text-center">
+            <iframe class='youtube-video' allowfullscreen="" frameborder="0" height="360"
+                src="https://www.youtube.com/embed/XheVMMdHII0?start=384&enablejsapi=1" width="640"></iframe>
+        </div>
+
+    </div>
+</div>
+<!-- 上面係彈出介面 default hidden-->
+<div class="container">
+    <div class="card my-3">
+        <div class="card-body">
+            <h5 class="card-title">我的物理治療</h5>
+            <p class="card-text">無須等待預約，輕鬆在家自助式物理治療！
+                <button class="btn btn-dark" class="btndetail" id="btndetail_02022022-1329"
+                    onclick="openModal('tutorial_vid');">
+                    <i class="bi bi-chat-right-dots-fill"></i>觀看示範</button>
+                <button type="button" onclick="start()" class="btn btn-primary">開始Start</button>
+                <button type="button" onclick="finish()" class="btn btn-primary">完成Finish</button>
+            </p>
+        </div>
+        <div class="bg-success text-center" id="finmsg">已完成動作，系統記錄已更新</div>
+        <img id="imgvideo" src="">
+        <video id="autoplay1" autoplay></video>
+
+    </div>
+</div>
+<script>
+    $("#finmsg").hide();
+
+    // get video dom element
+    const video = document.querySelector('video');
+
+    // get img dom element
+    const img = document.getElementById('imgvideo');
+
+    // request access to webcam
+    navigator.mediaDevices.getUserMedia({video: {width: 426, height: 240}}).then((stream) => video.srcObject = stream);
+
+    // returns a frame encoded in base64
+    const getFrame = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        const data = canvas.toDataURL('image/jpeg');
+        //console.log(data);
+        return data;
+    }
+
+    const WS_URL = 'ws://127.0.0.1:5000/ws'; // Change this if you serve on different server or port
+    const FPS = 3;
+    const ws = new WebSocket(WS_URL);
+    //send req
+    var finflag=false;
+
+    ws.onmessage = message => {
+        // set the base64 string to the src tag of the image
+        recjson = JSON.parse(message.data);
+        img.src = recjson["image"];
+        if (recjson["status"] =="updated" && finflag == false ){
+            finflag = true;
+            $("#finmsg").show();
+        }
+    }
+    var straa = '{"event": "command", "func": "' + 'stopVideo' + '", "args": ""}';
+    var wsFrequently;
+    var recjson = {};
+    recjson["step"] = 0;
+    recjson["finish"] = 0;
+    recjson["action"] = 0;
+    recjson["status"] = "new";
+    recjson["sportName"] = "{{sportname}}";
+    recjson["userid"] = "{{userid}}";
+
+    function start() {
+        if (getFrame() == 'data:,') {
+            alert("[自慧理]\n請允許使用相機的權限。");
+        } else {
+            console.log(`Connected to ${WS_URL}`);
+            wsFrequently = setInterval(() => {
+                recjson["image"] = getFrame();
+                jsonstr = JSON.stringify(recjson);
+                ws.send(jsonstr);
+            }, 150);
+            $("#imgvideo").show();
+            $("#autoplay1").hide();
+
+        }
+    }
+
+
+    function finish() {
+        clearInterval(wsFrequently);
+        $("#imgvideo").hide();
+        $("#autoplay1").show();
+    }
+</script>
+{% endblock %}

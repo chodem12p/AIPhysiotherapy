@@ -1,0 +1,15 @@
+{
+  "background_color": "#259E7C",
+  "description": "AI Physiotherapy: Improve your health is our goal.",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "../images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "name": "智療易(暫名)",
+  "short_name": "智療易(暫名)",
+  "start_url": "../"
+}

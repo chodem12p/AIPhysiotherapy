@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block title %}自慧理 - 我的記錄{% endblock %}
+{% block js %}
+<script type="text/javascript" src="/js/modal.js?=0.0006"></script>
+<script type="text/javascript" src="/js/filter.js?=0.0001"></script>
+<!-- 篩選功能嘅Javascript請放入filter.js 
+    唔好放喺度！！
+    唔好放JS喺依份html度！請放入filter.js！-->
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="css/page-myrecord.css?v=0.0009">
+{% endblock %}
+
+{% block main %}
+<!--彈出詳情介面 default hidden-->
+
+<script>
+	$(document).ready(function () {
+	    var date = new Date();
+        var strenddate =date.toISOString().split("T")[0];
+        date.setTime(date.getTime()-60*60*24*1000*30*3); //90日
+        var strstartdate =date.toISOString().split("T")[0];
+        $("#startdate").val(strstartdate);
+        $("#enddate").val(strenddate);
+
+        sennddb();
+
+
+	    function getCookie(name) {
+		  const value = `; ${document.cookie}`;
+		  const parts = value.split(`; ${name}=`);
+		  if (parts.length === 2) return parts.pop().split(';').shift();
+		}
+
+		req = {"method": "select", "tables": ["userlog"], "where": {"userID": getCookie("userid")}, "order": {}}
+        function sennddb() {
+        req = {
+                "method": "selectlog",
+                "where": {"userID": getCookie("userid"), "start": $("#startdate").val() , "end": $("#enddate").val()},
+            }
+		$.ajax({
+                type: "get",
+                url: "/db",
+                async: false,
+                dataType:"json",
+                data: {"jsonstr":JSON.stringify(req)} ,  //http 请求 记住要把数据转换为json格式数据
+                success: function (res) {
+                	result=JSON.parse(res);
+                	console.log(result);
+                	console.log(result.select);
+                	console.log(result.select[0]);
+                	console.log(result.select.length);
+					if (result.status=="success"){
+					    $("#tabledata").html("");
+					    row = result.select;
+					    rowdate = "";
+						for (var i=0;i<result.select.length;i++) {
+							// '+row[i]["sportName"]+'
+							var text1 ='<tr><td class="bg-secondary">日期:</td><td  class="bg-secondary" colspan="3" >'+row[i]["date"]+'</td></tr>';
+                            var text2 ='<tr class="trdate"><td></td><td>'+row[i]["sportName"]+'</td><td>'+row[i]["start"]+'</td><td>'+row[i]["end"]+'</td></tr>';
+                            if (rowdate!=row[i]["date"]){
+                                rowdate=row[i]["date"];
+                                $("#tabledata").append(text1);
+                            }
+                            $("#tabledata").append(text2);
+
+						}
+					}
+                },
+                error:function () {
+                    console.log("返回失敗");
+                }
+   		});
+   		}
+
+   		$(".btnSearch").click(function () {
+   		    sennddb();
+   		});
+
+   		$("#typeoption").change(function () {
+
+			if ($("#typeoption").val() == "") {
+				$("tr").filter(".trdate").hide();
+			} else {
+				$("tr").filter(".trdate").hide().filter(":contains(" + $(this).val() + ")").show();
+			}
+		});
+
+	});
+</script>
+
+
+<div id="modaldetail" class="modal">
+    <div class="modal-content">
+        <span class="close mx-3 my-4">&times;</span>
+        <div class="card card-body my-3">
+            <span class="lead"><strong>單項記錄詳情</strong></span>
+        </div>
+        <div class="container">
+            <table class="table modal-table">
+                <tbody>
+                    <tr>
+                        <th>治療類型：</th>
+                        <td id="modal-type"></td>
+                    </tr>
+                    <tr>
+                        <th>日期：</th>
+                        <td id="modal-date"></td>
+                    </tr>
+                    <tr>
+                        <th>開始時間：</th>
+                        <td id="modal-start-time"></td>
+                    </tr>
+                    <tr>
+                        <th>結束時間：</th>
+                        <td id="modal-end-time"></td>
+                    </tr>
+                    <tr>
+                        <th>持續時間：</th>
+                        <td id="modal-duration"></td>
+                    </tr>
+                    <tr>
+                        <th>動作評價：</th>
+                        <td><textarea rows="3" readonly id="modal-comment"></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn btn-primary mx-1">
+                <i class="bi bi-person-video2"></i>重播錄影
+            </button>
+            <button class="btn btn-secondary mx-1">
+                <i class="bi bi-film"></i>觀看示範
+            </button>
+        </div>
+    </div>
+</div>
+<!-- 上面係彈出詳情介面 default hidden-->
+
+<div class="container co-myrecord">
+    <h1 class="text-light text-shadow text-center my-5">我的記錄</h1>
+    <div class="card filter-card">
+    <button class="btn btn-primary" id="btn-filter-showhide" type="button">
+        <i class="bi bi-caret-down" id="caret-icon"></i><i class="bi bi-funnel-fill"></i>篩選</a>
+    </button></div>
+    <div class="card card-body filter-card-content " style="display: block;">
+        <form method="POST">
+        <p>依類型：<br>
+            <select name="type" id="typeoption">
+                <option value="no">不限</option>
+                <option value="上肢綜合運動">上肢綜合運動</option>
+                <option value="協調運動">協調運動</option>
+                <option value="抬腿運動">抬腿運動</option>
+            </select>
+        </p>
+        <p>依日期（日-月-年）：<br>
+               
+        <input type="date" id="startdate" name="date" value="" placeholder="" /> to
+        <input type="date" id="enddate" name="date" value="" placeholder="" />
+        </p>
+        <button class="btn btn-primary btnSearch" type="button">
+            <i class="bi bi-check-lg"></i>搜索</a></button>
+        <button class="btn btn-warning" type="reset">
+                <i class="bi bi-arrow-clockwise"></i>重設</a></button>
+        </form>
+        </form>
+    </div>
+
+
+    <div class="card">
+        <table class="table tb-myrecord">
+
+            <thead>
+                <tr>
+
+                        <th scope="col" colspan="5"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="row-blackul">
+                    <th>#</th>
+                    <th>治療類型</th>
+                    <th>開始時間</th>
+                    <th>結束時間</th>
+                </tr>
+                <tr>
+            </tbody>
+            <tbody id="tabledata">
+
+
+                <thead>
+                <tr>
+                    <th scope="col" colspan="6" class="text-center">已到底，沒有其他紀錄</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+      <thead>
+
+            </thead>
+</div>
+{% endblock %}

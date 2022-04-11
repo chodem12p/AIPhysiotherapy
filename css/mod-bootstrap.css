@@ -1,0 +1,110 @@
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+.bg-light {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+}
+li.nav-item a:active {
+    color: #fff !important;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+.card {
+    margin: 0 auto; /*centre the card*/
+    border-radius: .8rem !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    max-width: 600px;
+}
+.card img {
+    border-top-left-radius: calc(.8rem - 1px);
+    border-top-right-radius: calc(.8rem - 1px);
+}
+.card-title i, .btn i {
+    margin-right: 10px;
+}
+
+/*Button - primary*/
+
+.btn-primary, .btn-secondary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-dark {
+    color: white !important;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+    border-radius: .8rem;
+}
+.btn-primary {
+    background-image: linear-gradient(to top, #4ecca2, #247c4c);
+}
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+    border-color: #1a5836;
+}
+.btn-primary:active {
+    color: #94c5b3 !important;
+    background-image: linear-gradient(to top, #2d725a, #247c4c);
+}
+.btn-primary:active, .btn-primary:focus {
+    outline: rgba(31, 175, 108, 0.5) solid 5px !important;
+    box-shadow: none !important;
+}
+
+/*Button - secondary*/
+
+.btn-secondary {
+    background-image: linear-gradient(to top, #4ea4cc, #215e7a);
+}
+.btn-secondary, .btn-secondary:hover, .btn-secondary:active, .btn-secondary:focus {
+    border-color: #1b4457;
+}
+.btn-secondary:active {
+    color: #9ac5da !important;
+    background-image: linear-gradient(to top, #17485f, #215e7a);
+}
+.btn-secondary:active, .btn-secondary:focus {
+    outline: rgba(38, 139, 255, 0.5) solid 5px !important;
+    box-shadow: none !important;
+}
+
+/*Button - warning*/
+.btn-warning {
+    background-image: linear-gradient(to top, #cfbc0b, #d18008);
+}
+.btn-warning, .btn-warning:hover, .btn-warning:active, .btn-warning:focus {
+    border-color: #8f4b0c;
+}
+.btn-warning:active {
+    color: #dac09a !important;
+    background-image: linear-gradient(to top, #d18008, #6d470e);
+}
+.btn-warning:active, .btn-warning:focus {
+    outline: rgba(187, 100, 0, 0.5) solid 5px !important;
+    box-shadow: none !important;
+}
+/*Button - danger*/
+.btn-danger, .btn-danger:hover, .btn-danger:active, .btn-danger:focus {
+    border-color: #8d2630 !important;
+}
+/*Button - dark*/
+.btn-dark:active {
+    color: #bbb !important;
+    background-image: linear-gradient(to top, #333, #eee);
+}
+
+legend {
+    float: none;
+    width: auto;
+    text-align: center;
+    padding: 0 1rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-bottom: 5px solid white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    border-radius: .5rem;
+}
+
+.form-control {
+    border-radius: .8rem;
+    border-color: #b8c0c0;
+}
+.form-control:focus {
+    border-color: #4ecca2;
+    border-right-color: #1a5836;
+    box-shadow: 0 5px 20px #4ecca2;
+    outline: none;
+}

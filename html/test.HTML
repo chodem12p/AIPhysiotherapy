@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>菜鸟教程(runoob.com)</title>
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+</script>
+<script>
+var stra=""
+$(document).ready(function(){
+    /*
+    df = {"df": {"dt1":[0,23,90.09]}};
+    $.ajax({
+              type: "post",
+              url: "/db",
+              async: true,
+              // headers:{"Content-Type":"application/json","accept":"application/json","name":"666"},
+              // dataType:"json",
+              data:JSON.stringify(df),  //http 请求 记住要把数据转换为json格式数据
+              success: function (res) {
+                  console.log('成功检测');
+                  console.log(res);
+                  console.log(res["data"]["lst"]);
+                  alert("123")
+              },
+              error:function () {
+                  alert("返回数据失败")
+              }
+          });
+    */
+	stra ='{"method": "select", "tables": ["userinfo"], "selects": {"ack": "99999"}, "where": {}, "order": {"userID": "desc"}}';
+	req = {
+        "method": "select",
+        "tables": ["userinfo"],
+        "selects": {"ack": "99999"},
+        "where": {},
+        "order": {"userID": "desc"}
+    };
+
+	$.ajax({
+                type: "get",
+                url: "/db",
+                async: true,
+                // headers:{"Content-Type":"application/json","accept":"application/json","name":"666"},
+                dataType:"json",
+                data: {"jsonstr":JSON.stringify(req)} ,  //http 请求 记住要把数据转换为json格式数据
+                success: function (res) {
+                    alert("成功检测"+res);
+                    console.log('成功检测');
+                    $("#div1").html(res);
+                    console.log(res);
+                },
+                error:function () {
+                    alert("返回数据失败")
+                }
+    });
+});
+</script>
+</head>
+<body>
+
+<div id="div1"><h2>使用 jQuery AJAX 修改文本内容</h2></div>
+<button>获取其他内容</button>
+
+</body>
+</html>

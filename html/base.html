@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant-HK">
+
+<head>
+	<title>{% block title %}{% endblock %}</title> 
+	<link rel="icon" type="image/x-icon" href="/images/logo.ico">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- bootstrap css -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+	<!-- customize css -->
+	<link rel="stylesheet" href="/css/mod-bootstrap.css?v=1.0012">
+    <link rel="stylesheet" href="/css/general.css?v=1.0009">
+    {% block css %}{% endblock %}
+	<!-- js -->
+	<script type="text/javascript" src="/js/jquery-3.6.0.min.js?v=1"></script>
+	<script type="text/javascript" src="/js/jquery-ui.min.js?v=1"></script>
+	<script type="text/javascript" src="/js/sMode.js"></script> <!-- Simplified Mode Button -->
+	{% block js %}{% endblock %}
+	<!-- web font (網頁字型)-->
+	<link rel="stylesheet"
+		href="https://cdn.jsdelivr.net/gh/chiron-fonts/chiron-sans-hk@2.045/build/webfont/css/vf.css" />
+	<!-- PWA -->
+	<link rel="manifest" href="/pwa/manifest.webmanifest?v=0.0001">
+	<script type="text/javascript" src="/js/pwa.js?v=0.0001" defer></script>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/">
+                <img class="logo" width="50px" height="50px" src="/images/logo.ico"/>
+                <span class="app-name fs-2 mx-2">自慧理</span></a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#links">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="links">
+				<ul class="navbar-nav me-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/">主頁</a>
+					</li>
+					<!--<li class="nav-item">
+						<a class="nav-link" href="#">使用教學</a>
+					</li>-->
+					<li class="nav-item">
+						<a class="nav-link" href="/allCourse/">開始物理治療</a>
+					</li>
+					<!--<li class="nav-item">
+						<a class="nav-link" href="#">搜尋動作</a>
+					</li>-->
+					<li class="nav-item">
+						<a class="nav-link" href="/mySchedule/">排定治療日程</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/myRecord/">紀錄</a>
+<!--					</li>-->
+<!--					<li class="nav-item">-->
+<!--						<a class="nav-link" href="/searching/">搜尋物理治療</a>-->
+<!--					</li>-->
+					<!--<li class="nav-item">
+						<a class="nav-link d-flex" href="#setting">
+					<i class="bi bi-gear-fill me-2"></i>
+					設定</a>-->
+					</li>
+				</ul>
+				
+			</div>
+		</div>
+	</nav>
+
+	{% block main %}{% endblock %}
+	<!-- What is Saga-SelfPhy? Sagacity Self Physiotherapy ~LC -->
+	<div class="footer container-fluid text-light bg-dark py-4 mt-5">
+		自慧理 Saga-SelfPhy © 2021-2022 LYL0 Team
+		<br><span style="color: #888">A AI Physiotherapy Progressive Web Application.</span><hr>
+		<a href="/credit/">嗚謝</a>
+	</div>
+	<!-- bootstrap script-->
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"
+		integrity="sha384-W8fXfP3gkOKtndU4JGtKDvXbO53Wy8SZCQHczT5FMiiqmQfUpWbYdTil/SxwZgAN"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"
+		integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>

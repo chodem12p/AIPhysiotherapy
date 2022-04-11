@@ -1,0 +1,35 @@
+.tb-myrecord {
+    margin-top: 20px;
+}
+.tb-myrecord thead tr{
+    background-color: #ddd;
+}
+.tb-myrecord tbody tr{
+    border-bottom: 1px solid #ddd;
+}
+.table>:not(caption)>*>* {
+    border: 0 !important;
+}
+.row-blackul {
+    border-bottom: 1px solid #000 !important;
+}
+.modal-table {
+    width: fit-content !important;
+}
+.modal-table th{
+    text-align: right;
+}
+.modal textarea {
+    background: none;
+    resize: none;
+}
+.filter-card, .filter-card-content {
+    border: none !important;
+    background: none;
+    box-shadow: none !important;
+}
+.filter-card-content {
+    display: none;
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    margin-bottom: .8rem;
+}
